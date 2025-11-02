@@ -1,0 +1,73 @@
+﻿@using Huachin.MusicStore.Dto.Request.Generos
+@using Huachin.MusicStore.Dto.Response.Generos
+@using Huachin.MusicStore.Servicio.Interfaces
+@using Huachin.MusicStore.UI.Components.Pages.Mantenimientos.Eventos.Componentes
+@using Huachin.MusicStore.UI.Components.Shared
+@using Huachin.MusicStore.UI.ConfigRutas
+@attribute [Authorize(Roles = "Administrador")]
+@attribute [Route(Rutas.RegistrarEventos)]
+@inject IConcertServicio ConcertServicio
+@inject IGenreServicio GenreServicio
+@inject NavigationManager NavigationManager
+@inject IToastService toastService
+
+<h3>Registro de Evento</h3>
+
+<GroupBox Titulo="Registro de Evento">
+	<ChildContent>
+		<FormEvento ConcertRequest="ConcertRequest" GenresResponse="GenreResponse" OnGuardarEvent="OnGuardar"></FormEvento>
+	</ChildContent>
+</GroupBox>
+
+@code {
+	public ConcertRequestDto ConcertRequest { get; set; } = new ConcertRequestDto();
+	public IEnumerable<GenreResponseDto> GenreResponse { get; set; } = new List<GenreResponseDto>();
+
+	public bool IsLoading { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await ListarGeneros();
+	}
+
+	public async Task OnGuardar()
+	{
+		IsLoading = true;
+		try
+		{
+			var resultado = await ConcertServicio.Registrar(ConcertRequest);
+			if (resultado != null && resultado.Success)
+			{
+				toastService.ShowSuccess("Evento Registrado Correctamente");
+				NavigationManager.NavigateTo(@Rutas.ListarEventos);
+			}
+		}
+		catch (Exception)
+		{
+			toastService.ShowError("Ocurrio un error al registrar el evento");
+			throw;
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+
+	public async Task ListarGeneros()
+	{
+		try
+		{
+			var resultado = await GenreServicio.GetAsyn();
+			if (resultado != null && resultado.Success)
+			{
+				GenreResponse = resultado.Data;
+			}
+		}
+		catch (Exception)
+		{
+			toastService.ShowError("Ocurrio un error al listar los generos");
+			throw;
+		}
+		
+	}
+}

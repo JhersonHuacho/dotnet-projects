@@ -1,0 +1,115 @@
+﻿@using Huachin.MusicStore.Dto.Request.Generos
+@using Huachin.MusicStore.Dto.Request.Sale
+@using Huachin.MusicStore.Dto.Response.Eventos
+@using Huachin.MusicStore.Dto.Response.Sale
+@using Huachin.MusicStore.Servicio.Interfaces
+@using Huachin.MusicStore.UI.ConfigRutas
+@attribute [Authorize(Roles = "Cliente")]
+@attribute [Route(Rutas.CompraPedidosNav)]
+@inject NavigationManager NavigationManager
+@inject IToastService toastService
+@inject ISaleServicio SaleServicio
+@inject IConcertServicio ConcertServicio
+@inject SweetAlertService Swal;
+
+<h3>Compra Pedido</h3>
+<div class="row">
+	<div class="col-md-3">
+		<div class="card mb-4 shadow-sm">
+			<img src="@EventoResponse.ImageUrl" class="card-img-top" alt="Event Image">
+			<div class="card-body">
+				<h5 class="card-title">@EventoResponse.Title</h5>
+				<h6 class="card-subtitle mb-2 text-muted">@EventoResponse.NameGenre</h6>
+				<p class="card-text">@EventoResponse.Description</p>
+				<p class="card-text"><strong>Place:</strong> @EventoResponse.Place</p>
+				<p class="card-text"><strong>Date:</strong> @EventoResponse.DateEvent.ToString("dd/MM/yyyy")</p>
+				<p class="card-text"><strong>Price:</strong> @EventoResponse.UnitPrice.ToString("C")</p>
+				<p class="card-text"><strong>Tickets Available:</strong> @EventoResponse.TicketsQuantity</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-6">
+		<EditForm Model="SaleRequest" OnValidSubmit="OnGuardar">
+			<div class="row">
+				<div class="col-md-3">
+					<Card Color="CardColor.Secondary" Style="width:20rem">
+						<CardBody Class="text-center">
+							<CardTitle>@EventoResponse.Title</CardTitle>
+							<CardText>Precio: S/. @EventoResponse.UnitPrice</CardText>
+							<NumberInput id="Quantity" class="form-control" TextAlignment="Alignment.Center" @bind-Value="SaleRequest.Quantity" />
+							<CardText Class="mt-4">Total: S/. @(SaleRequest.Quantity * EventoResponse.UnitPrice)</CardText>
+							<button type="submit" class="btn btn-primary">Pagar</button>
+						</CardBody>
+					</Card>
+				</div>
+			</div>
+		</EditForm>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public int id { get; set; }
+
+	public ListaEventosResponseDto EventoResponse { get; set; } = new ListaEventosResponseDto();
+	public SaleRequestDto SaleRequest { get; set; } = new SaleRequestDto();
+	public bool IsLoading { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await GetEvento();
+	}
+
+	public async Task GetEvento()
+	{
+		try
+		{
+			IsLoading = true;
+			var resultado = await ConcertServicio.GetEventoById(id);
+			if (resultado != null && resultado.Success)
+			{
+				EventoResponse = resultado.Data;
+			}
+		}
+		catch (Exception)
+		{
+			toastService.ShowError("Ocurrio un error al obtener el evento");
+			throw;
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+
+	private async Task OnGuardar()
+	{
+		IsLoading = true;
+		try
+		{
+			SaleRequest.IdCustomer = 2;
+			SaleRequest.IdConcert = EventoResponse.IdEvento;
+			SaleRequest.OperationNumber = Guid.NewGuid().ToString();
+			SaleRequest.Total = SaleRequest.Quantity * EventoResponse.UnitPrice;
+			var response = await SaleServicio.Registrar(SaleRequest);
+			if (response.Success)
+			{
+				toastService.ShowSuccess(response.Message);
+				NavigationManager.NavigateTo(Rutas.RegistrarPedidios);
+			}
+			else
+			{
+				toastService.ShowError(response.Message);
+			}
+		}
+		catch (Exception)
+		{
+			
+			throw;
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+}

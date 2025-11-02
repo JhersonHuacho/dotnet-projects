@@ -1,0 +1,39 @@
+﻿@using Huachin.MusicStore.Dto.Request
+@using Huachin.MusicStore.Dto.Request.Generos
+
+<EditForm Model="GenreRequest" OnValidSubmit="OnGuardar">
+	<DataAnnotationsValidator />
+	<div class="row">
+		<div class="col-12">
+			<label for="Nombre">Nombre</label>
+			<InputText id="Nombre" class="form-control" @bind-Value="GenreRequest.Name" />
+			<ValidationMessage For="@(() => GenreRequest.Name)" />
+		</div>
+		<div class="col-12">
+			<label for="Estado">Estado</label>
+			<InputSelect class="form-select" @bind-Value="GenreRequest.Estado">
+				<option value="true">Habilitado</option>
+				<option value="false">Deshabilitado</option>
+			</InputSelect>
+		</div>
+	</div>
+	<div class="row mt-4">
+		<div class="form-group">
+			<button type="submit" class="btn btn-primary"><i class="bi bi-save"></i>Guardar</button>
+			<NavLink class="btn btn-danger" type="button" href="generos"><i class="bi bi-arrow-left"></i>Cancelar</NavLink>
+		</div>
+	</div>
+</EditForm>
+
+@code {
+	[Parameter]
+	public GenreRequestDto GenreRequest { get; set; } = new GenreRequestDto();
+
+	[Parameter]
+	public EventCallback OnGuardarEvent { get; set; } = default!;
+
+	private async Task OnGuardar()
+	{
+		await OnGuardarEvent.InvokeAsync();
+	}
+}

@@ -1,0 +1,88 @@
+﻿@using Huachin.MusicStore.AccesoDatos.Seguridad
+@using Huachin.MusicStore.Dto.Request.Login
+@using Huachin.MusicStore.Dto.Response.Login
+@using Huachin.MusicStore.UI.ConfigRutas
+@using Huachin.MusicStore.UI.Servicios
+@using Microsoft.AspNetCore.Identity
+@attribute [Route(Rutas.Login)]
+@inject SignInManager<SeguridadEntity> SignInManage
+@inject UserManager<SeguridadEntity> UserManager
+@inject AutenticacionService AuthService
+@inject NavigationManager Navegador
+@inject IToastService toastService
+
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-lg-5">
+			<div class="card shadow-lg mt-5">
+				<div class="card-header">
+					<h3>Iniciar Sesión</h3>
+				</div>
+				<div class="card-body">
+					<EditForm Model="Request" OnValidSubmit="IniciarSesion">
+						<DataAnnotationsValidator />
+						<div class="form-floating mb-3">
+							<input type="text" class="form-control" @bind="Request.Usuario" placeholder="Ingrese usuario" />
+							<label>Usuario</label>
+							<ValidationMessage For="() => Request.Usuario" />
+						</div>
+						<div class="form-floating mb-3">
+							<input type="text" class="form-control" @bind="Request.Password" placeholder="Ingrese password" />
+							<label>Password</label>
+							<ValidationMessage For="() => Request.Password" />
+						</div>
+						<div class="d-grid gap-1 mt-4 mb-1">
+							<button class="btn btn-primary" type="submit">Ingresar</button>
+						</div>
+					</EditForm>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	public LoginRequest Request { get; set; } = new();
+
+	public async Task IniciarSesion()
+	{
+		try
+		{
+			var usuario = await UserManager.FindByNameAsync(Request.Usuario);
+
+			if (usuario == null)
+			{
+				toastService.ShowWarning($"El usuario {usuario} no existe.");
+				return;
+			}
+
+			var clave = await UserManager.CheckPasswordAsync(usuario, Request.Password);
+
+			if (clave)
+			{
+				var rol = await UserManager.GetRolesAsync(usuario);
+
+				var response = new LoginResponse()
+					{
+						Id = usuario.IdUsuario,
+						Email = usuario.Email,
+						NombreCompleto = usuario.NombreCompleto,
+						Rol = rol.FirstOrDefault()
+					};
+
+				await AuthService.Login(response);
+
+				Navegador.NavigateTo("/");
+			}
+			else
+			{
+				toastService.ShowWarning("Credenciales incorrectas");
+			}
+		}
+		catch (Exception ex)
+		{
+			toastService.ShowError(ex.Message);
+			throw;
+		}
+	}
+}

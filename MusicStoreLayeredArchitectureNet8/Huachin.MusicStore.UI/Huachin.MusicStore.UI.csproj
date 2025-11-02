@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>9b24054e-0e83-4601-947c-7935227f755e</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Docker\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazor.Bootstrap" Version="3.3.1" />
+    <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+    <PackageReference Include="Blazored.Toast" Version="4.2.1" />
+    <PackageReference Include="CurrieTechnologies.Razor.SweetAlert2" Version="5.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Huachin.MusicStore.AccesoDatos\Huachin.MusicStore.AccesoDatos.csproj" />
+    <ProjectReference Include="..\Huachin.MusicStore.Repositorios\Huachin.MusicStore.Repositorios.csproj" />
+    <ProjectReference Include="..\Huachin.MusicStore.Servicio\Huachin.MusicStore.Servicio.csproj" />
+  </ItemGroup>
+
+</Project>

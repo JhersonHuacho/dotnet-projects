@@ -1,0 +1,67 @@
+﻿@attribute [Route(Rutas.RegistrarPedidios)]
+@attribute [Authorize(Roles = "Cliente")]
+@inject NavigationManager NavigationManager
+@inject IToastService toastService
+@inject IConcertServicio ConcertServicio
+@inject SweetAlertService Swal;
+
+@using Huachin.MusicStore.Dto.Request.Eventos
+@using Huachin.MusicStore.Dto.Response.Eventos
+@using Huachin.MusicStore.Servicio.Interfaces
+@using Huachin.MusicStore.UI.ConfigRutas
+
+<h3>Lista de eventos</h3>
+
+<div class="row">
+	@foreach (var evento in ListaEventosResponse)
+	{
+		<div class="col-md-3">
+			<div class="card mb-4 shadow-sm">
+				<img src="@evento.ImageUrl" class="card-img-top" alt="Event Image">
+				<div class="card-body">
+					<h5 class="card-title">@evento.Title</h5>
+					<h6 class="card-subtitle mb-2 text-muted">@evento.NameGenre</h6>
+					<p class="card-text">@evento.Description</p>
+					<p class="card-text"><strong>Place:</strong> @evento.Place</p>
+					<p class="card-text"><strong>Date:</strong> @evento.DateEvent.ToString("dd/MM/yyyy")</p>
+					<p class="card-text"><strong>Price:</strong> @evento.UnitPrice.ToString("C")</p>
+					<p class="card-text"><strong>Tickets Available:</strong> @evento.TicketsQuantity</p>
+					<NavLink href="@($"{Rutas.CompraPedidos}/{evento.IdEvento}")" class="btn btn-primary">Comprar Ticket</NavLink>
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+@code {
+	public IEnumerable<ListaEventosResponseDto> ListaEventosResponse { get; set; } = new List<ListaEventosResponseDto>();
+	public BusquedaEventosRequest Request { get; set; } = new BusquedaEventosRequest();
+	public bool IsLoading { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await ListarEventos();
+	}
+
+	public async Task ListarEventos()
+	{
+		try
+		{
+			IsLoading = true;
+			var resultado = await ConcertServicio.Listar(Request);
+			if (resultado != null && resultado.Success)
+			{
+				ListaEventosResponse = resultado.Data;
+			}
+		}
+		catch (Exception)
+		{
+			toastService.ShowError("Ocurrio un error al listar los generos");
+			throw;
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+}

@@ -1,0 +1,136 @@
+﻿@using Huachin.MusicStore.Dto.Request.Generos
+@using Huachin.MusicStore.Dto.Response.Generos
+@using Huachin.MusicStore.UI.ConfigRutas
+
+<EditForm Model="ConcertRequest" OnValidSubmit="OnGuardar">
+	<DataAnnotationsValidator />
+	<div class="row">
+		<div class="col-6">
+			<div class="row">
+				<div class="col-12">
+					<label for="Titulo">Titulo</label>
+					<InputText id="Titulo" class="form-control" @bind-Value="ConcertRequest.Title" />
+					<ValidationMessage For="@(() => ConcertRequest.Title)" />
+				</div>
+				<div class="col-12">
+					<label for="Descripcion">Descripcion</label>
+					<InputText id="Descripcion" class="form-control" @bind-Value="ConcertRequest.Description" />
+					<ValidationMessage For="@(() => ConcertRequest.Description)" />
+				</div>
+				<div class="col-12">
+					<label for="Fecha">Fecha</label>
+					@* <InputDate id="Fecha" class="form-control" @bind-Value="ConcertRequest.Fecha" /> *@
+					<InputText id="Fecha" class="form-control" @bind-Value="ConcertRequest.Fecha" />
+					<ValidationMessage For="@(() => ConcertRequest.Fecha)" />
+				</div>
+				<div class="col-12">
+					<label for="Hora">Hora</label>
+					<InputText id="Hora" class="form-control" @bind-Value="ConcertRequest.Hora" />
+					<ValidationMessage For="@(() => ConcertRequest.Hora)" />
+				</div>
+				<div class="col-12">
+					<label for="Place">Lugar</label>
+					<InputText id="Place" class="form-control" @bind-Value="ConcertRequest.Place" />
+					<ValidationMessage For="@(() => ConcertRequest.Place)" />
+				</div>
+				<div class="col-12">
+					<label for="TicketsQuantity">Cantidad de Entradas</label>
+					<InputNumber id="TicketsQuantity" class="form-control" @bind-Value="ConcertRequest.TicketsQuantity" />
+					<ValidationMessage For="@(() => ConcertRequest.TicketsQuantity)" />
+				</div>
+				<div class="col-12">
+					<label for="Precio">Precio</label>
+					<InputNumber id="Precio" class="form-control" @bind-Value="ConcertRequest.UnitPrice" />
+					<ValidationMessage For="@(() => ConcertRequest.UnitPrice)" />
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-12">
+					<label>Género:</label>
+					<select class="form-select" @bind="ConcertRequest.IdGenre">
+						<option value="0">-Seleccione Género-</option>
+						@foreach (var item in GenresResponse)
+						{
+							<option value="@item.Id">@item.Name</option>
+						}
+					</select>
+					<ValidationMessage For="@(() => ConcertRequest.IdGenre)" />
+				</div>
+				<div class="col-12">
+					<label for="Estado">Estado</label>
+					<InputSelect class="form-select" @bind-Value="ConcertRequest.Estado">
+						<option value="true">Habilitado</option>
+						<option value="false">Deshabilitado</option>
+					</InputSelect>
+				</div>
+			</div>
+		</div>
+		<div class="col-6">
+			<div class="row">				
+				<div class="col-12 d-flex justify-content-center">
+					<div class="image-container">
+						@if (!string.IsNullOrEmpty(ConcertRequest.ImageUrl))
+						{
+							<img src="@ConcertRequest.ImageUrl" alt="Imagen del evento" />
+						}
+						else
+						{
+							<span>Imagen no disponible</span>
+						}
+					</div>
+				</div>
+				<div class="col-12 mt-4">
+					<label class="custom-file-upload">
+						<InputFile id="ImageUpload" OnChange="OnInputFileChange" style="display: none" />
+						Imagen
+					</label>
+					@* <ValidationMessage For="@(() => ConcertRequest.ImageUrl)" /> *@
+				</div>
+			</div>
+		</div>
+	</div>	
+	<div class="row mt-4">
+		<div class="form-group">
+			<button type="submit" class="btn btn-primary"><i class="bi bi-save"></i>Guardar</button>
+			<NavLink class="btn btn-danger" type="button" href="@Rutas.ListarEventos"><i class="bi bi-arrow-left"></i>Cancelar</NavLink>
+		</div>
+	</div>
+</EditForm>
+
+@code {
+	[Parameter]
+	public ConcertRequestDto ConcertRequest { get; set; } = new ConcertRequestDto();
+
+	[Parameter]
+	public IEnumerable<GenreResponseDto> GenresResponse { get; set; } = new List<GenreResponseDto>();
+
+	[Parameter]
+	public EventCallback OnGuardarEvent { get; set; } = default!;
+
+	private async Task OnGuardar()
+	{
+		try
+		{
+			await OnGuardarEvent.InvokeAsync();
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine("Error al guardar la data: ", ex);
+		}		
+	}
+
+	private async Task OnInputFileChange(InputFileChangeEventArgs e)
+	{
+		try
+		{
+			var file = e.File;
+			var buffer = new byte[file.Size];
+			await file.OpenReadStream(maxAllowedSize: 1024 * 1024 * 10).ReadAsync(buffer); // 10 MB
+			// await file.OpenReadStream().ReadAsync(buffer);
+			var base64String = Convert.ToBase64String(buffer);
+			ConcertRequest.ImageUrl = $"data:{file.ContentType};base64,{base64String}";
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error uploading file: {ex.Message}");
+		}
+	}
+}

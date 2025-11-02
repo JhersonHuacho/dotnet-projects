@@ -1,0 +1,49 @@
+﻿@attribute [Route(Rutas.RegistrarGeneros)]
+@using Huachin.MusicStore.Dto.Request
+@using Huachin.MusicStore.Dto.Request.Generos
+@using Huachin.MusicStore.Servicio.Interfaces
+@using Huachin.MusicStore.UI.Components.Pages.Mantenimientos.Generos.Componentes
+@using Huachin.MusicStore.UI.Components.Shared
+@using Huachin.MusicStore.UI.ConfigRutas
+@attribute [Authorize(Roles = "Administrador")]
+@inject IGenreServicio GenreServicio
+@inject NavigationManager NavigationManager
+@inject IToastService toastService
+
+<h3>Registro Genero</h3>
+
+<GroupBox Titulo="Genero">
+	<ChildContent>
+		<FormGenero GenreRequest="GenreRequest" OnGuardarEvent="OnGuardar"></FormGenero>
+	</ChildContent>
+</GroupBox>
+
+@code {
+	
+	public GenreRequestDto GenreRequest { get; set; } = new GenreRequestDto();
+
+	public bool IsLoading { get; set; }
+
+	public async Task OnGuardar()
+	{
+		IsLoading = true;
+		try
+		{
+			var resultado = await GenreServicio.Registrar(GenreRequest);
+			if (resultado != null && resultado.Success)
+			{
+				toastService.ShowSuccess("Genero Registrado Correctamente");
+				NavigationManager.NavigateTo(@Rutas.ListarGeneros);
+			}
+		}
+		catch (Exception)
+		{
+			toastService.ShowError("Ocurrio un error al registrar el genero");
+			throw;
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+}

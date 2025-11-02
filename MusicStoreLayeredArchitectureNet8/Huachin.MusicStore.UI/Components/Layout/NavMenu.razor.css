@@ -1,0 +1,186 @@
+﻿
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #F0F4FF;
+}
+
+/* Sidebar estilos */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 85px; /* Ancho colapsado inicial */
+    display: flex;
+    overflow-x: hidden;
+    flex-direction: column;
+    background: #4c0bce;
+    padding: 25px 20px;
+    transition: all 0.4s ease;
+}
+
+    .sidebar:hover {
+        width: 260px; /* Ancho desplegado al pasar el mouse */
+    }
+
+    /* Ocultar submen�s cuando el sidebar est� colapsado */
+    .sidebar:not(:hover) .submenu-toggle:checked + label + .submenu {
+        max-height: 0; /* Ocultar submen� cuando el sidebar no est� expandido */
+    }
+
+    .sidebar .sidebar-header {
+        display: flex;
+        align-items: center;
+    }
+
+        .sidebar .sidebar-header img {
+            width: 42px;
+            border-radius: 50%;
+        }
+
+        .sidebar .sidebar-header h2 {
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-left: 23px;
+        }
+
+/* Estilos para submen�s */
+.has-submenu {
+    position: relative;
+}
+
+.submenu-toggle {
+    display: none; /* Ocultar checkbox */
+}
+
+.submenu {
+    max-height: 0; /* Ocultar submen� por defecto */
+    overflow: hidden;
+    list-style: none;
+    padding-left: 20px;
+    margin-top: 10px;
+    transition: max-height 0.4s ease-out; /* Transici�n para el efecto de deslizamiento */
+}
+
+.submenu-toggle:checked + label + .submenu {
+    max-height: 200px; /* Altura m�xima cuando el submen� est� desplegado */
+}
+
+.submenu li a {
+    padding: 10px 0;
+    font-size: 0.9rem;
+    color: #b1b1b1;
+    display: block;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+    .submenu li a:hover {
+        background-color: #fff; /* Fondo blanco al hacer hover */
+        color: #000; /* Texto negro al hacer hover */
+    }
+
+/* Estilos del label para que parezca un enlace */
+.submenu-toggle + label {
+    display: flex;
+    align-items: center;
+    gap: 0 20px;
+    color: #fff;
+    font-weight: 500;
+    white-space: nowrap;
+    padding: 15px 10px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+    .submenu-toggle + label:hover {
+        color: #161a2d;
+        background: #fff;
+        border-radius: 4px;
+    }
+
+/* Asegura que el men� principal tambi�n est� alineado correctamente */
+.sidebar-links {
+    list-style: none;
+    margin-top: 20px;
+    height: 80%;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+    .sidebar-links::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sidebar-links h4 {
+        color: #fff;
+        font-weight: 500;
+        white-space: nowrap;
+        margin: 10px 0;
+        position: relative;
+    }
+
+    .sidebar-links li a {
+        display: flex;
+        align-items: center;
+        gap: 0 20px;
+        color: #fff;
+        font-weight: 500;
+        white-space: nowrap;
+        padding: 15px 10px;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+        .sidebar-links li a:hover {
+            color: #161a2d;
+            background: #fff;
+            border-radius: 4px;
+        }
+
+.user-account {
+    margin-top: auto;
+    padding: 12px 10px;
+    margin-left: -10px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    color: #161a2d;
+}
+
+    .user-profile img {
+        width: 42px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+    }
+
+    .user-profile h3 {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .user-profile span {
+        font-size: 0.775rem;
+        font-weight: 600;
+    }
+
+.user-detail {
+    margin-left: 23px;
+    white-space: nowrap;
+}
+
+.sidebar:hover .user-account {
+    background: #fff;
+    border-radius: 4px;
+}

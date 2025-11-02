@@ -1,0 +1,139 @@
+﻿@using Huachin.MusicStore.Dto.Request.Generos
+@using Huachin.MusicStore.Dto.Response.Generos
+@using Huachin.MusicStore.Servicio.Interfaces
+@using Huachin.MusicStore.UI.Components.Shared
+@using Huachin.MusicStore.UI.ConfigRutas
+@attribute [Route(Rutas.ListarGeneros)]
+@attribute [Authorize(Roles = "Administrador")]
+@inject NavigationManager NavigationManager
+@inject IToastService toastService
+@inject IGenreServicio GenreServicio
+@inject SweetAlertService Swal;
+
+<h3>Lista de Generos</h3>
+
+<GroupBox Titulo="Buscar Genero">
+	<ChildContent>
+		<div class="row">
+			<div class="col-lg-4 col-md-4 col-sm-12">
+				<label>Razon Social: </label>
+				<input class="form-control" @bind="Request.Name" />
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-12">
+				<div class="btn btn-group btn-group-sm">
+					<button class="btn btn-outline-info" @onclick="ListarGeneros"><i class="bi bi-search"></i></button>
+					<button class="btn btn-outline-info" @onclick="Limpiar"><i class="bi bi-trash"></i></button>
+					<button class="btn btn-outline-info" @onclick="OnNuevo"><i class="bi bi-plus"></i> Nuevo</button>
+				</div>
+			</div>
+		</div>
+	</ChildContent>
+</GroupBox>
+
+<div class="row mt-3">
+	<div class="table table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Estado</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in ListaClientesResponse)
+				{
+					<tr>
+						<td>@item.Name</td>
+						<td>@item.Estado</td>
+						<td>
+							<NavLink class="btn btn-warning" href="@($"{Rutas.EditarGeneros}/{item.Id}")">Editar</NavLink>
+							<button class="btn btn-danger" @onclick="() => OnEliminar(item)">Eliminar</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@code {
+	public BusquedaGenerosRequest Request { get; set; } = new BusquedaGenerosRequest();
+	public IEnumerable<ListaClientesResponseDto> ListaClientesResponse { get; set; } = new List<ListaClientesResponseDto>();
+	public bool IsLoading { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await ListarGeneros();
+	}
+
+	public async Task ListarGeneros()
+	{
+		IsLoading = true;
+		try
+		{
+			var resultado = await GenreServicio.Listar(Request);
+			if (resultado != null && resultado.Success)
+			{
+				ListaClientesResponse = resultado.Data;
+			}
+		}
+		catch (Exception)
+		{
+			toastService.ShowError("Ocurrio un error al listar los generos");
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+
+	public async Task Limpiar()
+	{
+		Request = new BusquedaGenerosRequest();
+		await ListarGeneros();
+	}
+
+	public async Task OnNuevo()
+	{
+		NavigationManager.NavigateTo(@Rutas.RegistrarGeneros);
+	}
+
+	public async Task OnEliminar(ListaClientesResponseDto item)
+	{
+		try
+		{
+			var respuesta = await Swal.FireAsync(new SweetAlertOptions
+			{
+				Text = $"¿Está seguro de eliminar el género {item.Name}?",
+				Title = "Eliminar género",
+				Icon = SweetAlertIcon.Question,
+				ShowCancelButton = true,
+				ConfirmButtonText = "Si",
+				CancelButtonText = "No"
+			});
+
+			if (respuesta.IsConfirmed)
+			{
+				IsLoading = true;
+				var resultado = await GenreServicio.DeleteAsync(item.Id);
+				if (resultado != null)
+				{
+					toastService.ShowSuccess("Genero eliminado correctamente");
+					await ListarGeneros();
+				}
+			}
+
+			await Task.CompletedTask;
+		}
+		catch (Exception)
+		{
+			toastService.ShowError("Ocurrió un error al eliminar el genero");
+			throw;
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+}

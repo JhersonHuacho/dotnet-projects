@@ -1,0 +1,76 @@
+﻿@using Huachin.MusicStore.UI.ConfigRutas
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <img src="icon.png" alt="logo" />
+        <h2>Eventos</h2>
+    </div>
+    <ul class="sidebar-links">
+        <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Cliente">
+            <Authorized>
+                @* <li> *@
+                @*     <a href="/pedidos/lista"> *@
+                @*         <span class="material-symbols-outlined"> view_comfy_alt </span>Eventos *@
+                @*     </a> *@
+                @* </li> *@
+
+                <li>
+                    <a href="@Rutas.RegistrarPedidios">
+                        <span class="material-symbols-outlined"> add_shopping_cart </span>Realizar Pedido
+                    </a>
+                </li>
+
+                <li>
+                    <a href="@Rutas.ListarPedidos">
+                        <span class="material-symbols-outlined"> view_comfy_alt </span>Mis pedidos
+                    </a>
+                </li>
+            </Authorized>
+        </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+        
+        <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrador">
+            <Authorized>
+                <li class="has-submenu">
+                    <input type="checkbox" id="projects-toggle" class="submenu-toggle">
+                    <label for="projects-toggle">
+                        <span class="material-symbols-outlined"> folder </span>Mantenimientos
+                    </label>
+                    <ul class="submenu">
+                        <li><a href="@Rutas.ListarGeneros">Generos</a></li>
+                        <li><a href="@Rutas.ListarEventos">Eventos</a></li>
+                        <li><a href="#">Ventas</a></li>
+                    </ul>
+                </li>
+                <li class="has-submenu">
+                    <input type="checkbox" id="reports-toggle" class="submenu-toggle">
+                    <label for="reports-toggle">
+                        <span class="material-symbols-outlined"> folder </span>Reportes
+                    </label>
+                    <ul class="submenu">
+                        <li><a href="#">Ventas</a></li>
+                    </ul>
+                </li>
+            </Authorized>
+        </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+        <li class="has-submenu">
+            <input type="checkbox" id="profile-toggle" class="submenu-toggle">
+            <label for="profile-toggle">
+                <span class="material-symbols-outlined"> account_circle </span>Perfil
+            </label>
+            <ul class="submenu">
+                <li><a href="#">Mi Perfil</a></li>
+                <li><a href="#">Permisos</a></li>
+                <li><a href="#">Cerrar Sesion</a></li>
+            </ul>
+        </li>
+    </ul>
+    <div class="user-account">
+        <div class="user-profile">
+            <img src="user.png" alt="Profile Image" />
+            <div class="user-detail">
+                <h3>Usuario</h3>
+                <span>Adminstrador</span>
+            </div>
+        </div>
+
+    </div>
+</aside>

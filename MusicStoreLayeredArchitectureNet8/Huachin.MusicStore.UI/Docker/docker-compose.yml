@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  sqlserver_arq_capas:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: bd_arq_capas_musicstore
+    restart: always
+    environment:
+      MSSQL_SA_PASSWORD: "Password123"
+      MSSQL_PID: "Express"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - E:\Docker\Volumenes\sqlserver_data_arq_capas_proyecto:/var/opt/mssql/data
+    ports:
+      - 1403:1433
+  
+  postgres_arq_capas:
+    image: postgres:latest
+    restart: always
+    container_name: bd_arq_capas_musicstore_seguridad
+    environment:
+      POSTGRES_DB: bdseguridad
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password2024
+    volumes:
+      - E:\Docker\Volumenes\postgresql_data_arq_capas_proyecto:/var/lib/postgresql/data
+    ports:
+    - "1404:5432"

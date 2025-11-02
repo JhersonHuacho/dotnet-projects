@@ -1,0 +1,112 @@
+﻿@attribute [Route(Rutas.EditarEventosNav)]
+@using Huachin.MusicStore.Dto.Request.Generos
+@using Huachin.MusicStore.Dto.Response.Eventos
+@using Huachin.MusicStore.Dto.Response.Generos
+@using Huachin.MusicStore.Servicio.Interfaces
+@using Huachin.MusicStore.UI.Components.Pages.Mantenimientos.Eventos.Componentes
+@using Huachin.MusicStore.UI.Components.Shared
+@using Huachin.MusicStore.UI.ConfigRutas
+@attribute [Authorize(Roles = "Administrador")]
+@inject IConcertServicio ConcertServicio
+@inject IGenreServicio GenreServicio
+@inject NavigationManager NavigationManager
+@inject IToastService toastService
+
+<h3>EditarEvento</h3>
+
+<GroupBox Titulo="Editar Evento">
+	<ChildContent>
+		<FormEvento ConcertRequest="ConcertRequest" GenresResponse="GenreResponse" OnGuardarEvent="OnGuardar"></FormEvento>
+	</ChildContent>
+</GroupBox>
+
+@code {
+	[Parameter]
+	public int id { get; set; }
+
+	public ListaEventosResponseDto EventosResponseDto { get; set; } = new ListaEventosResponseDto();
+	public ConcertRequestDto ConcertRequest { get; set; } = new ConcertRequestDto();
+	public IEnumerable<GenreResponseDto> GenreResponse { get; set; } = new List<GenreResponseDto>();
+	public bool IsLoading { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await ListarGeneros();
+		await ObtenerPorId();
+	}
+
+	public async Task OnGuardar()
+	{
+		IsLoading = true;
+		try
+		{
+			var resultado = await ConcertServicio.UpdateAsync(id, ConcertRequest);
+			if (resultado != null && resultado.Success)
+			{
+				toastService.ShowSuccess("Evento Actualizado Correctamente");
+				NavigationManager.NavigateTo(@Rutas.ListarEventos);
+			}
+		}
+		catch (Exception)
+		{
+			toastService.ShowError("Ocurrio un error al actualizar el evento");
+			throw;
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+
+	public async Task ListarGeneros()
+	{
+		try
+		{
+			var resultado = await GenreServicio.GetAsyn();
+			if (resultado != null && resultado.Success)
+			{
+				GenreResponse = resultado.Data;
+			}
+		}
+		catch (Exception)
+		{
+			toastService.ShowError("Ocurrio un error al listar los generos");
+			throw;
+		}
+	}
+
+	public async Task ObtenerPorId()
+	{
+		IsLoading = true;
+		try
+		{
+			var resultado = await ConcertServicio.GetEventoById(id);
+
+			if (resultado != null && resultado.Data != null)
+			{
+				EventosResponseDto = resultado.Data;
+				ConcertRequest = new()
+				{
+					IdGenre = GenreResponse.Where(g => g.Name == EventosResponseDto.NameGenre).Select(g => g.Id).First(),
+					Title = EventosResponseDto.Title,
+					Description = EventosResponseDto.Description,
+					Place = EventosResponseDto.Place,
+					UnitPrice = EventosResponseDto.UnitPrice,
+					Fecha = EventosResponseDto.DateEvent.Date.ToString(),
+					Hora = EventosResponseDto.DateEvent.Hour.ToString(),
+					ImageUrl = EventosResponseDto.ImageUrl,
+					TicketsQuantity = EventosResponseDto.TicketsQuantity,
+					Estado = EventosResponseDto.Estado,
+				};
+			}
+		}
+		catch (Exception ex)
+		{
+			toastService.ShowError("Ocurrió un error al obtener el cliente: " + ex.Message);
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+}

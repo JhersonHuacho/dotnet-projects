@@ -1,0 +1,95 @@
+﻿@using Blazored.Toast.Configuration
+@using Huachin.MusicStore.UI.ConfigRutas
+@using Huachin.MusicStore.UI.Servicios
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
+@inject AutenticacionService AuthService
+@inject NavigationManager Navegador
+
+<BlazoredToasts Position="ToastPosition.BottomRight" />
+<NavMenu />
+<div class="main-container expanded">
+    <div class="content-header">
+        <nav class="navbar navbar-expand-lg py-3 shadow-sm" style="background-color: #4c0bce;">
+            <div class="container-fluid">
+                <!-- Marca del sitio o logo -->
+                <a class="navbar-brand text-white" href="/">
+                    <i class="bi bi-shop-window"></i> Eventos
+                </a>
+
+                <!-- Botón de colapso para pantallas pequeñas -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Elementos del menú de navegación -->
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto d-flex align-items-center">
+                        <li class="nav-item me-3">
+                            <button class="btn btn-outline-light rounded-pill px-3" @onclick="OnLogout">
+                                <i class="bi bi-door-open me-2"></i>Salir
+                            </button>
+                        </li>
+                        <!-- Separador de usuario -->
+                        <li class="nav-item">
+                            <div class="d-flex align-items-center border-start ps-3">
+                                <!-- Nombre del usuario autenticado -->
+                                <NavLink class="nav-link text-white d-flex align-items-center">
+                                    <i class="bi bi-person-fill me-2"></i>@NombreUsuario
+                                </NavLink>
+                            </div>
+                        </li>
+                        <!-- Opciones de ingreso y registro para usuarios no autenticados -->
+                        <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+                            <NotAuthorized>
+                                <li class="nav-item me-3">
+                                    <NavLink class="btn btn-outline-light rounded-pill px-3" href="login">
+                                        <i class="bi bi-arrow-right-circle me-2"></i>Ingresar
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="btn btn-outline-light rounded-pill px-3" href="register">
+                                        <i class="bi bi-person-fill-add me-2"></i>Registrarse
+                                    </NavLink>
+                                </li>
+                            </NotAuthorized>
+                        </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>                        
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </div>
+
+    <div class="content-body">
+        @Body
+    </div>
+
+    <footer class="content-footer">
+        <p>&copy; @DateTime.Now.Year JhersonDev. All Rights Reserved.</p>
+    </footer>
+</div>
+
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
+@code {
+    public AuthenticationState authenticationState { get; set; } = default!;
+    public string NombreUsuario { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+	{
+        authenticationState = await AuthService.GetAuthenticationStateAsync();
+		NombreUsuario = authenticationState.User.Identity.Name;
+	}
+
+	public async Task OnLogout()
+	{
+		await AuthService.Logout();
+        Navegador.NavigateTo(@Rutas.Login);
+	}
+}

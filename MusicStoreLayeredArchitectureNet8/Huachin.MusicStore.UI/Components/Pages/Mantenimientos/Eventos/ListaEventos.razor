@@ -1,0 +1,118 @@
+﻿@attribute [Route(Rutas.ListarEventos)]
+@inject NavigationManager NavigationManager
+@inject IToastService toastService
+@inject IConcertServicio ConcertServicio
+@inject SweetAlertService Swal;
+@attribute [Authorize(Roles = "Administrador")]
+@using Huachin.MusicStore.Dto.Request.Eventos
+@using Huachin.MusicStore.Dto.Response.Eventos
+@using Huachin.MusicStore.Servicio.Interfaces
+@using Huachin.MusicStore.UI.Components.Shared
+@using Huachin.MusicStore.UI.ConfigRutas
+
+<h3>Lista de Eventos</h3>
+
+<GroupBox Titulo="Buscar Eventos">
+	<ChildContent>
+		<div class="row">
+			<div class="col-lg-4 col-md-4 col-sm-12">
+				<label>Razon Social: </label>
+				<input class="form-control" @bind="Request.Title" />
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-12">
+				<div class="btn btn-group btn-group-sm">
+					<button class="btn btn-outline-info" @onclick="ListarEventos"><i class="bi bi-search"></i></button>
+					<button class="btn btn-outline-info" @onclick="Limpiar"><i class="bi bi-trash"></i></button>
+					<button class="btn btn-outline-info" @onclick="OnNuevo"><i class="bi bi-plus"></i> Nuevo</button>
+				</div>
+			</div>
+		</div>
+	</ChildContent>
+</GroupBox>
+
+<div class="row mt-3">
+	<div class="table table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>Titulo</th>
+					<th>Descripción</th>
+					<th>Fecha y Hora</th>
+					<th>Cant. Entradas</th>
+					<th>Precio</th>
+					<th>Género</th>
+					<th>Estado</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in ListaEventosResponse)
+				{
+					<tr>
+						<td>@item.Title</td>
+						<td>@item.Description</td>
+						<td>@item.DateEvent</td>
+						<td>@item.TicketsQuantity</td>
+						<td>@item.UnitPrice</td>
+						<td>@item.NameGenre</td>
+						<td>@(item.Estado ? "Habilitado" : "Deshabilitado")</td>
+						<td>
+							<NavLink class="btn btn-warning" href="@($"{Rutas.EditarEventos}/{item.IdEvento}")">Editar</NavLink>
+							<button class="btn btn-danger" @onclick="() => OnEliminar(item)">Eliminar</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@code {
+	public BusquedaEventosRequest Request { get; set; } = new BusquedaEventosRequest();
+	public IEnumerable<ListaEventosResponseDto> ListaEventosResponse { get; set; } = new List<ListaEventosResponseDto>();
+
+	public bool IsLoading { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await ListarEventos();
+	}
+
+	public async Task ListarEventos()
+	{
+		try
+		{
+			IsLoading = true;
+			var resultado = await ConcertServicio.Listar(Request);
+			if (resultado != null && resultado.Success)
+			{
+				ListaEventosResponse = resultado.Data;
+			}			
+		}
+		catch (Exception)
+		{
+			toastService.ShowError("Ocurrio un error al listar los generos");
+			throw;
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+
+	public async Task Limpiar()
+	{
+		ListaEventosResponse = new List<ListaEventosResponseDto>();
+		await ListarEventos();
+	}
+
+	public void OnNuevo()
+	{
+		NavigationManager.NavigateTo(@Rutas.RegistrarEventos);
+	}
+
+	public async Task OnEliminar(ListaEventosResponseDto item)
+	{
+		await Task.CompletedTask;
+	}
+}
