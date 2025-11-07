@@ -12,7 +12,7 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 
 		public string OperationNumber { get; private set; } = string.Empty;
 
-		public Money Total { get; private set; }
+		public Money Total { get; private set; } = null!;
 
 		public short Quantity { get; private set; }
 
@@ -45,7 +45,7 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 			int idConcert,
 			DateTime saleDate,
 			string operationNumber,
-			decimal total,
+			Money total,
 			short quantity)
 		{
 
@@ -57,11 +57,6 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 			if (string.IsNullOrWhiteSpace(operationNumber))
 			{
 				throw new ArgumentException("Operation number cannot be null or empty.", nameof(operationNumber));
-			}
-
-			if (total <= 0)
-			{
-				throw new ArgumentException("Total amount must be greater than zero.", nameof(total));
 			}
 
 			if (quantity <= 0)

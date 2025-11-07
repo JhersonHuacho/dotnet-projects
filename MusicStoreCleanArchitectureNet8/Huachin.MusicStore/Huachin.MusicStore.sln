@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{1E12FC97-0
 		docs\PRESENTATION-README.md = docs\PRESENTATION-README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Huachin.MusicStore.Api", "src\Huachin.MusicStore.Api\Huachin.MusicStore.Api.csproj", "{14D69984-6AEE-4092-A517-715045B87556}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{F0B273D7-81BD-4714-A2C9-92C210437B12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0B273D7-81BD-4714-A2C9-92C210437B12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0B273D7-81BD-4714-A2C9-92C210437B12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14D69984-6AEE-4092-A517-715045B87556}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14D69984-6AEE-4092-A517-715045B87556}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14D69984-6AEE-4092-A517-715045B87556}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14D69984-6AEE-4092-A517-715045B87556}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 		{75DB1480-CA0C-42EA-96EC-361D0E3FD5E5} = {6DB5EACE-2FAC-4288-89BF-17CDA926BDF1}
 		{99D7BD0F-DF65-4269-A01E-E5EC5D5081C2} = {6DB5EACE-2FAC-4288-89BF-17CDA926BDF1}
 		{F0B273D7-81BD-4714-A2C9-92C210437B12} = {0A900336-1FBD-48AE-B5B1-398C3164E21A}
+		{14D69984-6AEE-4092-A517-715045B87556} = {D6890EF9-ECA1-43E9-9D4B-662F9DF3874E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DE74BD3C-1794-4CB5-95E6-DD73444E627A}

@@ -61,7 +61,7 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 			string title, 
 			string description, 
 			string place, 
-			decimal unitPrice, 
+			Money unitPrice, 
 			DateTime dateEvent, 
 			string? imageUrl, 
 			int ticketsQuantity, 
@@ -80,11 +80,6 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 			if (string.IsNullOrWhiteSpace(place))
 			{
 				throw new ArgumentException("Concert place cannot be null or empty.", nameof(place));
-			}
-
-			if (unitPrice < 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(unitPrice), "Unit price cannot be negative.");
 			}
 
 			if (ticketsQuantity < 0)

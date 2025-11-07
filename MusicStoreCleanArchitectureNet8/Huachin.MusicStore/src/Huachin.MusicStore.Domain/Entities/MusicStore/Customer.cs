@@ -6,7 +6,8 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 	public class Customer : BaseEntity
 	{
 		public Email Email { get; private set; } = null!;
-		public string FullName { get; private set; } = string.Empty;
+		public string FirstName { get; private set; } = string.Empty;
+		public string LastName { get; private set; } = string.Empty;
 
 		// Navigation property
 		private readonly List<Sale> _sales = new();
@@ -16,36 +17,30 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 		{
 		}
 
-		private Customer(Email email, string fullName)
+		private Customer(Email email, string firstName, string lastName)
 		{
 			Email = email;
-			FullName = fullName;
+			FirstName = firstName;
+			LastName = lastName;
 		}
 
-		public static Customer Create(Email email, string fullName)
+		public static Customer Create(Email email, string firstName, string lastName)
 		{
 			if (string.IsNullOrWhiteSpace(email))
 			{
 				throw new DomainException("Email cannot be null or empty.");
 			}
 
-			if (string.IsNullOrWhiteSpace(fullName))
+			if (string.IsNullOrWhiteSpace(firstName))
 			{
 				throw new DomainException("Full name cannot be null or empty.");
 			}
 
-			if (!IsValidEmail(email))
-			{
-				throw new DomainException("Invalid email format.");
+			if (string.IsNullOrWhiteSpace(lastName)) {
+				throw new DomainException("Last name cannot be null or empty.");
 			}
 
-			return new Customer(email, fullName);
-		}
-
-		private static bool IsValidEmail(string email)
-		{
-			return System.Text.RegularExpressions.Regex.IsMatch(email,
-				@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+			return new Customer(email, firstName, lastName);
 		}
 	}
 }
