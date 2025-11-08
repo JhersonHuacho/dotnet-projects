@@ -1,0 +1,21 @@
+### ==============================================
+### HUACHIN MUSIC STORE API - VARIABLES GLOBALES
+### ==============================================
+
+### Environments
+# Development
+@baseUrl = http://localhost:5126/api
+@contentType = application/json
+
+# Staging (comentado)
+# @baseUrl = https://staging-api.musicstore.com/api
+
+# Production (comentado)  
+# @baseUrl = https://api.musicstore.com/api
+
+### Authentication (para futuro uso)
+# @token = Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+
+### Common Headers
+@accept = application/json
+@userAgent = MusicStore-API-Client/1.0

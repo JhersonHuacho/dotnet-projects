@@ -1,0 +1,28 @@
+### Variables
+@baseUrl = http://localhost:5126/api
+@contentType = application/json
+@accept = application/json
+
+###
+GET {{baseUrl}}/genre/
+Accept: {{accept}}
+
+###
+POST {{baseUrl}}/genre/
+Accept: {{accept}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Rock",
+  "estado": true
+}
+
+###
+POST {{baseUrl}}/genre/
+Accept: {{accept}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Jazz",
+  "estado": true
+}

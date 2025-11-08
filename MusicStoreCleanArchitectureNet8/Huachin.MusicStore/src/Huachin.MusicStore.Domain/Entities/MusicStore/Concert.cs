@@ -4,7 +4,7 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 {
 	public class Concert : BaseEntity
 	{
-		public int IdGenre { get; private set; }
+		public Guid IdGenre { get; private set; }
 
 		public string Title { get; private set; } = string.Empty;
 
@@ -35,7 +35,7 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 		}
 
 		private Concert(
-			int idGenre, 
+			Guid idGenre, 
 			string title, 
 			string description, 
 			string place, 
@@ -57,7 +57,7 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 		}
 
 		public static Concert Create(
-			int idGenre, 
+			Guid idGenre, 
 			string title, 
 			string description, 
 			string place, 

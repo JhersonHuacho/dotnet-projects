@@ -1,4 +1,7 @@
-﻿using Huachin.MusicStore.Application.Handlers.Sales.Create;
+﻿using Huachin.MusicStore.Application.Dtos;
+using Huachin.MusicStore.Application.Dtos.Sales;
+using Huachin.MusicStore.Application.Handlers.Sales.Create;
+using Huachin.MusicStore.Application.Handlers.Sales.GetAll;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +17,13 @@ namespace Huachin.MusicStore.Api.Controllers
 		{
 			_logger = logger;
 			_mediator = mediator;
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetAllSales()
+		{
+			var result = await _mediator.Send(new GetAllSaleQuery());
+			return Ok(BaseResponse<ICollection<ListaVentasResponseDto>>.Success(result));
 		}
 
 		[HttpPost]

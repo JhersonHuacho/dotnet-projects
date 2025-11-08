@@ -16,7 +16,7 @@ namespace Huachin.MusicStore.Infrastructure
 			// Register infrastructure services here
 			services.AddDbContext<MusicStoreDbContext>(options =>
 			{
-				options.UseNpgsql(configuration.GetConnectionString("FlatFinderDb"));
+				options.UseNpgsql(configuration.GetConnectionString("MusicStoreDb"));
 			});
 
 			services.AddScoped<ICustomerRepository, CustomerRepository>();

@@ -1,4 +1,8 @@
-﻿using Huachin.MusicStore.Application.Handlers.Concerts.Create;
+﻿using Huachin.MusicStore.Application.Dtos;
+using Huachin.MusicStore.Application.Dtos.Concerts;
+using Huachin.MusicStore.Application.Dtos.Genres;
+using Huachin.MusicStore.Application.Handlers.Concerts.Create;
+using Huachin.MusicStore.Application.Handlers.Concerts.GetAll;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +19,13 @@ namespace Huachin.MusicStore.Api.Controllers
 		{
 			_logger = logger;
 			_mediator = mediator;
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetAllConcerts()
+		{
+			var result = await _mediator.Send(new GetAllConcertQuery());
+			return Ok(BaseResponse<ICollection<ListaEventosResponseDto>>.Success(result));
 		}
 
 		[HttpPost]

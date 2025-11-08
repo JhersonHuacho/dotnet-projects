@@ -19,10 +19,14 @@ namespace Huachin.MusicStore.Infrastructure.Configurations.Entities
 			builder.Property(c => c.LastName)
 				.IsRequired()
 				.HasMaxLength(50);
-			
-			builder.Property(c => c.Email)
-				.IsRequired()
-				.HasMaxLength(100);
+
+			builder.OwnsOne(c => c.Email, email =>
+			{
+				email.Property(m => m.Value)
+					.HasColumnName("Email")
+					.IsRequired()
+					.HasMaxLength(100); ;				
+			});
 		}
 	}
 }

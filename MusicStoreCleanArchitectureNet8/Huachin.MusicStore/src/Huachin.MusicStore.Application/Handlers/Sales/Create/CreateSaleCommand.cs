@@ -3,8 +3,8 @@
 namespace Huachin.MusicStore.Application.Handlers.Sales.Create
 {
 	public record CreateSaleCommand(
-		int IdCustomer,
-		int IdConcert,
+		Guid IdCustomer,
+		Guid IdConcert,
 		DateTime SaleDate,
 		string OperationNumber,
 		decimal Total,

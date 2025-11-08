@@ -1,0 +1,36 @@
+### Variables
+@baseUrl = http://localhost:5126/api
+@contentType = application/json
+@accept = application/json
+
+### ==============================================
+### GET - Obtener todos los conciertos
+### ==============================================
+GET {{baseUrl}}/concert
+Accept: {{accept}}
+
+### ==============================================
+### GET - Obtener concierto por ID
+### ==============================================
+GET {{baseUrl}}/concert/{{concertId}}
+Accept: {{accept}}
+
+### ==============================================
+### POST - Crear concierto
+### ==============================================
+POST {{baseUrl}}/concert/
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "idGenre": "934eacc4-8afc-4591-be82-ca7de36d0c1f",
+  "title": "Rock Festival 2024",
+  "description": "The biggest rock event of the year",
+  "place": "Madison Square Garden",
+  "unitPrice": 150.00,
+  "fecha": "2024-12-15",
+  "hora": "20:00:00",
+  "imageUrl": "https://example.com/rock-festival.jpg",
+  "ticketsQuantity": 5000,
+  "estado": true
+}

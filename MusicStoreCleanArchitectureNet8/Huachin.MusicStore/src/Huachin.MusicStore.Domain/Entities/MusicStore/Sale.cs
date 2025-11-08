@@ -4,9 +4,9 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 {
 	public class Sale : BaseEntity
 	{
-		public int IdCustomer { get; private set; }
+		public Guid IdCustomer { get; private set; }
 
-		public int IdConcert { get; private set; }
+		public Guid IdConcert { get; private set; }
 
 		public DateTime SaleDate { get; private set; }
 
@@ -25,8 +25,8 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 		}
 
 		private Sale(
-			int idCustomer,
-			int idConcert,
+			Guid idCustomer,
+			Guid idConcert,
 			DateTime saleDate,
 			string operationNumber,
 			Money total,
@@ -41,8 +41,8 @@ namespace Huachin.MusicStore.Domain.Entities.MusicStore
 		}
 
 		public static Sale Create(
-			int idCustomer,
-			int idConcert,
+			Guid idCustomer,
+			Guid idConcert,
 			DateTime saleDate,
 			string operationNumber,
 			Money total,

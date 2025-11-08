@@ -3,7 +3,7 @@
 namespace Huachin.MusicStore.Application.Handlers.Concerts.Create
 {
 	public record CreateConcertCommand(
-		int IdGenre,
+		Guid IdGenre,
 		string Title,
 		string Description,
 		string Place,

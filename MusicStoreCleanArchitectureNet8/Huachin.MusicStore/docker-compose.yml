@@ -1,0 +1,47 @@
+name: clean-architecture-music-store
+
+services:
+    postgresql_clean:
+        image: postgres:15
+        container_name: bd_postgres_galaxy
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: password2025
+            POSTGRES_DB: musicstore_db
+        ports:
+            - "5432:5432"
+        volumes:
+            - E:\DockerVolumenes\bd_postgres_galaxy:/var/lib/postgresql/data
+        networks:
+            - galaxy_arq_clean_network
+    
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.15.0
+        container_name: elasticsearch_clean
+        environment:
+            - discovery.type=single-node
+            - xpack.security.enabled=false
+            - xpack.security.http.ssl.enabled=false
+            - ES_JAVA_OPTS=-Xms1g -Xmx1g
+        ports:
+            - "9200:9200"
+        volumes:
+            - E:\DockerVolumenes\elasticsearch_security:/usr/share/elasticsearch/data
+        networks:
+            - galaxy_arq_clean_network
+    
+    kibana:
+        image: docker.elastic.co/kibana/kibana:8.15.0
+        container_name: kibana_clean
+        environment:
+            - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+        ports:
+            - "5601:5601"
+        depends_on:
+            - elasticsearch
+        networks:
+            - galaxy_arq_clean_network
+
+networks:
+  galaxy_arq_clean_network:
+    driver: bridge

@@ -1,0 +1,20 @@
+### Variables
+@baseUrl = http://localhost:5126/api
+@contentType = application/json
+@accept = application/json
+
+### ==============================================
+### POST - Crear concierto
+### ==============================================
+POST {{baseUrl}}/sale
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "customerId": 1,
+  "concertId": 1,
+  "saleDate": "2024-06-15T14:30:00",
+  "operationNumber": "OP123456789",
+  "total": 10,
+  "quantity": 300
+}
