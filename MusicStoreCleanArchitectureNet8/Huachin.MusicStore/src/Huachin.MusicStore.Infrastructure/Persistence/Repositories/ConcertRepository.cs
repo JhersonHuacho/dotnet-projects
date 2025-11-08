@@ -11,7 +11,6 @@ namespace Huachin.MusicStore.Infrastructure.Persistence.Repositories
 		{
 		}
 
-		// ✅ Método específico para obtener conciertos con géneros
 		public async Task<ICollection<Concert>> ListWithGenresAsync()
 		{
 			return await _context.Set<Concert>()

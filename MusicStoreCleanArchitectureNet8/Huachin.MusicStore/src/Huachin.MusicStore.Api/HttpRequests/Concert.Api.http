@@ -34,3 +34,23 @@ Accept: {{accept}}
   "ticketsQuantity": 5000,
   "estado": true
 }
+
+### ==============================================
+### POST - Crear concierto
+### ==============================================
+POST {{baseUrl}}/concert/
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "idGenre": "45e1cc50-a8d5-48b0-89a9-cde42b9bdc61",
+  "title": "Jazz Festival 2024",
+  "description": "The biggest rock event of the year",
+  "place": "Madison Square Garden",
+  "unitPrice": 150.00,
+  "fecha": "2024-12-15",
+  "hora": "20:00:00",
+  "imageUrl": "https://example.com/rock-festival.jpg",
+  "ticketsQuantity": 5000,
+  "estado": true
+}

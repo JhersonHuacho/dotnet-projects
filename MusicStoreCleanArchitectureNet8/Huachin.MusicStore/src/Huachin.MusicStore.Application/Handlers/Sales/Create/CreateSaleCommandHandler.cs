@@ -23,10 +23,11 @@ namespace Huachin.MusicStore.Application.Handlers.Sales.Create
 		public async Task<Guid> Handle(CreateSaleCommand request, CancellationToken cancellationToken)
 		{
 			var total = Money.Create(request.Total, "USD");
+			var dateEvent = DateTime.SpecifyKind(request.SaleDate, DateTimeKind.Utc);
 			var sale = Sale.Create(
 				request.IdCustomer,
 				request.IdConcert,
-				request.SaleDate,
+				dateEvent,
 				request.OperationNumber,
 				total,
 				request.Quantity);

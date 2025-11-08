@@ -11,8 +11,8 @@ Content-Type: {{contentType}}
 Accept: {{accept}}
 
 {
-  "customerId": 1,
-  "concertId": 1,
+  "idCustomer": "0ad18d60-362e-453c-bb6e-0628a3e1eb61",
+  "idConcert": "1e3eca09-d022-4ed0-9b6e-f7fa77f63691",
   "saleDate": "2024-06-15T14:30:00",
   "operationNumber": "OP123456789",
   "total": 10,

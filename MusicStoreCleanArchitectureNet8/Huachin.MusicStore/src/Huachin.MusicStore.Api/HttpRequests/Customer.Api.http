@@ -1,0 +1,17 @@
+### Variables
+@baseUrl = http://localhost:5126/api
+@contentType = application/json
+@accept = application/json
+
+### ==============================================
+### POST - Crear customer
+### ==============================================
+POST {{baseUrl}}/customer/
+Content-Type: {{contentType}}
+Accept: {{accept}}
+
+{
+  "firstName": "Jherson2",
+  "lastName": "Huacho2",
+  "email": "jhersons.huacho@example.com"
+}
